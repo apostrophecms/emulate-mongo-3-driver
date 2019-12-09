@@ -32,7 +32,7 @@ function decorate(obj) {
     }
     if ((typeof obj[p]) === 'function') {
       tinsel[p] = function() {
-        const result = obj[p].apply(obj, arguments); 
+        const result = obj[p].apply(obj, arguments);
         if (result === obj) {
           // So that chained methods chain on the
           // decorated object, not the original
@@ -50,13 +50,13 @@ function decorate(obj) {
     const allProps = [];
     let curr = obj;
     do {
-      const props = Object.getOwnPropertyNames(curr)
-      props.forEach(function(prop){
+      const props = Object.getOwnPropertyNames(curr);
+      props.forEach(function(prop) {
         if (allProps.indexOf(prop) === -1) {
-          allProps.push(prop)
+          allProps.push(prop);
         }
       });
-    } while (curr = Object.getPrototypeOf(curr));
+    } while (curr === Object.getPrototypeOf(curr));
     return allProps;
   }
 }
@@ -133,12 +133,12 @@ function decorateDb(db, client) {
   };
   // Reintroduce the "db" method of db objects, for talking to a second
   // database via the same connection
-  newDb.db = function(name) { 
+  newDb.db = function(name) {
     return decorateDb(client.db(name));
   };
   // Reintroduce the "close" method of db objects, yes it closes
   // the entire client, did that before too
-  newDb.close = function() { 
+  newDb.close = function() {
     return client.close.apply(client, arguments);
   };
   return newDb;
@@ -201,7 +201,7 @@ function decorateCollection(collection) {
       }
     }
   };
- return newCollection;
+  return newCollection;
 }
 
 function decorateCursor(cursor) {
@@ -213,5 +213,3 @@ function decorateCursor(cursor) {
 // TODO: https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md#bulkwriteresult--bulkwriteerror (we don't use it)
 // https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md#mapreduce-inlined-results (we don't use it)
 // See others on that page
-
-

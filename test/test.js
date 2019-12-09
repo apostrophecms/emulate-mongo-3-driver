@@ -109,4 +109,3 @@ describe('use mongodb 3 driver in a 2.x style', function() {
     });
   });
 });
-
