@@ -1,0 +1,30 @@
+{
+  "name": "emulate-mongo-2-driver",
+  "version": "1.0.0",
+  "description": "Emulate the Mongo 2.x nodejs driver on top of the Mongo 3.x nodejs driver, for bc",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apostrophecms/emulate-mongo-2-driver.git"
+  },
+  "keywords": [
+    "mongodb",
+    "mongo",
+    "apostrophecms"
+  ],
+  "author": "Apostrophe Technologies",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apostrophecms/emulate-mongo-2-driver/issues"
+  },
+  "homepage": "https://github.com/apostrophecms/emulate-mongo-2-driver#readme",
+  "dependencies": {
+    "mongodb": "^3.3.5"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.2"
+  }
+}
