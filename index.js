@@ -56,7 +56,7 @@ function decorate(obj) {
           allProps.push(prop);
         }
       });
-    } while (curr === Object.getPrototypeOf(curr));
+    } while ((curr = Object.getPrototypeOf(curr)));
     return allProps;
   }
 }
