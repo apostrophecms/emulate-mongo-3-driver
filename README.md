@@ -22,4 +22,4 @@ const mongo = require('emulate-mongo-2-driver');
 // Use it here as if it were the 2.x driver
 ```
 
-This module attempts complete compatibility with the [2.x features mentioned as obsolete here](https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md). An emphasis has been placed on features used by ApostropheCMS but PRs for further compatibility are welcome.
+This module aims for complete compatibility with the [2.x features mentioned as obsolete or changed here](https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md) but there may be omissions. An emphasis has been placed on features used by ApostropheCMS but PRs for further compatibility are welcome.
