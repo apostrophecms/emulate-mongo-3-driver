@@ -22,4 +22,14 @@ const mongo = require('emulate-mongo-2-driver');
 // Use it here as if it were the 2.x driver
 ```
 
+## Goals
+
 This module aims for complete compatibility with the [2.x features mentioned as obsolete or changed here](https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md) but there may be omissions. An emphasis has been placed on features used by ApostropheCMS but PRs for further compatibility are welcome.
+
+## What about those warnings?
+
+"What about the warnings re: insert, update and ensureIndex operations being obsolete?"
+
+Although deprecated, these operations are supported by the 3.x driver and work just fine.
+
+However, since the preferred newer operations were also supported by the 2.x driver, the path forward is clear. We will migrate away from using them gradually, and you should do the same. It doesn't make sense to provide "deprecation-free" wrappers when doing the right thing is in easy reach.

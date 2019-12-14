@@ -76,6 +76,16 @@ MongoClient.connect = function(uri, options, callback) {
     callback = options;
     options = {};
   }
+  if (!options) {
+    options = {};
+  }
+  // Eliminate deprecation warnings unless opted into
+  if (options.useNewUrlParser === undefined) {
+    options.useNewUrlParser = true;
+  }
+  if (options.useUnifiedTopology === undefined) {
+    options.useUnifiedTopology = true;
+  }
   if ((typeof callback) === 'function') {
     return superConnect.call(OriginalClient, uri, options, function(err, client) {
       if (err) {
@@ -88,9 +98,6 @@ MongoClient.connect = function(uri, options, callback) {
         return callback(e);
       }
     });
-  }
-  if (!options) {
-    options = {};
   }
   return superConnect.call(OriginalClient, uri, options).then(function(client) {
     const parsed = new URL(uri);
@@ -202,6 +209,46 @@ function decorateCollection(collection) {
       }
     }
   };
+  // Deprecation-free wrapper based on insertMany and insertOne
+  newCollection.insert = function(input, options, callback) {
+    if (!callback) {
+      if ((typeof options) === 'function') {
+        callback = options;
+        options = {};
+      }
+    }
+    if (!options) {
+      options = {};
+    }
+    const fn = Array.isArray(input) ? newCollection.insertMany : newCollection.insertOne;
+    if (callback) {
+      return fn.call(newCollection, input, options, callback);
+    } else {
+      return fn.call(newCollection, input, options);
+    }
+  };
+  // Deprecation-free wrapper
+  // TODO what about upsert
+  // TODO what about calls without an operator
+  newCollection.update = function(selector, document, options, callback) {
+    if (!callback) {
+      if ((typeof options) === 'function') {
+        callback = options;
+        options = {};
+      }
+    }
+    if (!options) {
+      options = {};
+    }
+    const fn = options.multi ? newCollection.updateMany : newCollection.updateOne;
+    if (callback) {
+      return fn.call(newCollection, selector, document, options, callback);
+    } else {
+      return fn.call(newCollection, selector, document, options);
+    }
+  };
+  // Deprecation-free pointer
+  newCollection.ensureIndex = newCollection.enableIndex;
   return newCollection;
 }
 
