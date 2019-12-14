@@ -164,9 +164,11 @@ function decorateCollection(collection) {
       return cursor;
     }
   };
+
   // Before this module existed, Apostrophe patched this into
   // the mongodb collection prototype
   newCollection.findWithProjection = newCollection.find;
+
   const superFindOne = collection.findOne;
   newCollection.findOne = function(criteria, projection, callback) {
     if (projection && ((typeof projection) === 'object')) {
@@ -209,46 +211,6 @@ function decorateCollection(collection) {
       }
     }
   };
-  // Deprecation-free wrapper based on insertMany and insertOne
-  newCollection.insert = function(input, options, callback) {
-    if (!callback) {
-      if ((typeof options) === 'function') {
-        callback = options;
-        options = {};
-      }
-    }
-    if (!options) {
-      options = {};
-    }
-    const fn = Array.isArray(input) ? newCollection.insertMany : newCollection.insertOne;
-    if (callback) {
-      return fn.call(newCollection, input, options, callback);
-    } else {
-      return fn.call(newCollection, input, options);
-    }
-  };
-  // Deprecation-free wrapper
-  // TODO what about upsert
-  // TODO what about calls without an operator
-  newCollection.update = function(selector, document, options, callback) {
-    if (!callback) {
-      if ((typeof options) === 'function') {
-        callback = options;
-        options = {};
-      }
-    }
-    if (!options) {
-      options = {};
-    }
-    const fn = options.multi ? newCollection.updateMany : newCollection.updateOne;
-    if (callback) {
-      return fn.call(newCollection, selector, document, options, callback);
-    } else {
-      return fn.call(newCollection, selector, document, options);
-    }
-  };
-  // Deprecation-free pointer
-  newCollection.ensureIndex = newCollection.enableIndex;
   return newCollection;
 }
 
