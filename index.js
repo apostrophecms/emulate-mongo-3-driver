@@ -84,7 +84,17 @@ MongoClient.connect = function(uri, options, callback) {
       if (err) {
         return callback(err);
       }
-      const parsed = new URL(uri);
+      let parsed;
+      try {
+        parsed = new URL(uri);
+      } catch (e) {
+        // MongoDB driver tolerates URIs that the WHATWG parser will not,
+        // deal with the common cases
+        // eslint-disable-next-line no-useless-escape
+        const matches = uri.match(/mongodb:\/\/(([^:]+):([^@]+)@)?([^\/]+)(\/([^?]+))?(\?(.*))?$/);
+        const newUri = 'mongodb://' + (matches[1] ? (reencode(matches[2]) + ':' + reencode(matches[3]) + '@') : '') + reencode(matches[4]) + (matches[5] ? ('/' + matches[6]) : '') + (matches[7] ? ('?' + matches[8]) : '');
+        parsed = new URL(newUri);
+      }
       try {
         return callback(null, decorateDb(client.db(parsed.pathname.substr(1)), client));
       } catch (e) {
@@ -96,6 +106,9 @@ MongoClient.connect = function(uri, options, callback) {
     const parsed = new URL(uri);
     return decorateDb(client.db(parsed.pathname.substr(1)), client);
   });
+  function reencode(s) {
+    return encodeURIComponent(decodeURIComponent(s));
+  }
 };
 
 // TODO: also wrap legacy db.open? We never used it. See:
