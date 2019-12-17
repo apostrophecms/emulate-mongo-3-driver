@@ -79,13 +79,6 @@ MongoClient.connect = function(uri, options, callback) {
   if (!options) {
     options = {};
   }
-  // Eliminate deprecation warnings unless opted into
-  if (options.useNewUrlParser === undefined) {
-    options.useNewUrlParser = true;
-  }
-  if (options.useUnifiedTopology === undefined) {
-    options.useUnifiedTopology = true;
-  }
   if ((typeof callback) === 'function') {
     return superConnect.call(OriginalClient, uri, options, function(err, client) {
       if (err) {
