@@ -1,3 +1,7 @@
+## 1.0.3
+
+URI tolerance change from 1.0.2 now covers connect() with a promise as well.
+
 ## 1.0.2
 
 Tolerate MongoDB URIs that break the WHATWG URL parser.

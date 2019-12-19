@@ -84,17 +84,7 @@ MongoClient.connect = function(uri, options, callback) {
       if (err) {
         return callback(err);
       }
-      let parsed;
-      try {
-        parsed = new URL(uri);
-      } catch (e) {
-        // MongoDB driver tolerates URIs that the WHATWG parser will not,
-        // deal with the common cases
-        // eslint-disable-next-line no-useless-escape
-        const matches = uri.match(/mongodb:\/\/(([^:]+):([^@]+)@)?([^\/]+)(\/([^?]+))?(\?(.*))?$/);
-        const newUri = 'mongodb://' + (matches[1] ? (reencode(matches[2]) + ':' + reencode(matches[3]) + '@') : '') + reencode(matches[4]) + (matches[5] ? ('/' + matches[6]) : '') + (matches[7] ? ('?' + matches[8]) : '');
-        parsed = new URL(newUri);
-      }
+      const parsed = parseUri(uri);
       try {
         return callback(null, decorateDb(client.db(parsed.pathname.substr(1)), client));
       } catch (e) {
@@ -103,12 +93,9 @@ MongoClient.connect = function(uri, options, callback) {
     });
   }
   return superConnect.call(OriginalClient, uri, options).then(function(client) {
-    const parsed = new URL(uri);
+    const parsed = parseUri(uri);
     return decorateDb(client.db(parsed.pathname.substr(1)), client);
   });
-  function reencode(s) {
-    return encodeURIComponent(decodeURIComponent(s));
-  }
 };
 
 // TODO: also wrap legacy db.open? We never used it. See:
@@ -224,6 +211,25 @@ function decorateCursor(cursor) {
   const newCursor = decorate(cursor);
   newCursor.nextObject = newCursor.next;
   return newCursor;
+}
+
+function parseUri(uri) {
+  let parsed;
+  try {
+    parsed = new URL(uri);
+  } catch (e) {
+    // MongoDB driver tolerates URIs that the WHATWG parser will not,
+    // deal with the common cases
+    // eslint-disable-next-line no-useless-escape
+    const matches = uri.match(/mongodb:\/\/(([^:]+):([^@]+)@)?([^\/]+)(\/([^?]+))?(\?(.*))?$/);
+    const newUri = 'mongodb://' + (matches[1] ? (reencode(matches[2]) + ':' + reencode(matches[3]) + '@') : '') + reencode(matches[4]) + (matches[5] ? ('/' + matches[6]) : '') + (matches[7] ? ('?' + matches[8]) : '');
+    parsed = new URL(newUri);
+  }
+  return parsed;
+}
+
+function reencode(s) {
+  return encodeURIComponent(decodeURIComponent(s));
 }
 
 // TODO: https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md#bulkwriteresult--bulkwriteerror (we don't use it)
