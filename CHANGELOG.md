@@ -1,3 +1,7 @@
+## 1.0.4
+
+Node 13.x compatibility. Resolves [this bug report](https://github.com/apostrophecms/apostrophe/issues/2120).
+
 ## 1.0.3
 
 URI tolerance change from 1.0.2 now covers connect() with a promise as well.

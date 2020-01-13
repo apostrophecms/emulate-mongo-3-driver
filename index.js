@@ -7,7 +7,7 @@ function decorate(obj) {
   };
 
   const neverDecorate = [
-    'apply', 'call', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'arguments', 'caller', 'callee', 'super_', 'constructor', 'bind'
+    'apply', 'call', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'arguments', 'caller', 'callee', 'super_', 'constructor', 'bind', 'pipesCount'
   ];
 
   // Other possible bad things to decorate, but I think I
