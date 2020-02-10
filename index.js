@@ -1,6 +1,16 @@
 const mongodb = require('mongodb');
 const URL = require('url').URL;
 
+function omit(obj, keys) {
+  const n = {};
+  Object.keys(obj).forEach(function(key) {
+    if (keys.indexOf(key) === -1) {
+      n[key] = obj[key];
+    }
+  });
+  return n;
+}
+
 function decorate(obj) {
   const tinsel = {
     __emulated: true
@@ -204,6 +214,134 @@ function decorateCollection(collection) {
       }
     }
   };
+
+  // ensureIndex is deprecated but createIndex has exactly the
+  // same behavior
+
+  newCollection.ensureIndex = function(fieldOrSpec, options, callback) {
+    return newCollection.createIndex.apply(newCollection, Array.prototype.slice.call(arguments));
+  };
+
+  newCollection.insert = function(docs, options, callback) {
+    // Use undeprecated equivalents for the two use cases
+    if (Array.isArray(docs)) {
+      return newCollection.insertMany.apply(newCollection, Array.prototype.slice.call(arguments));
+    } else {
+      return newCollection.insertOne.apply(newCollection, Array.prototype.slice.call(arguments));
+    }
+  };
+
+  newCollection.remove = function(selector, options, callback) {
+    // Undeprecated equivalents
+    if (options && ((typeof options) === 'object') && options.single) {
+      arguments[1] = omit(arguments[1], [ 'single' ]);
+      return newCollection.deleteOne.apply(newCollection, Array.prototype.slice.call(arguments));
+    } else {
+      return newCollection.deleteMany.apply(newCollection, Array.prototype.slice.call(arguments));
+    }
+  };
+
+  newCollection.update = function(selector, doc, _options, callback) {
+    var takesCallback = (typeof arguments[arguments.length - 1]) === 'function';
+    var options = (_options && ((typeof _options) === 'object') && _options) || {};
+    var multi;
+    var atomic;
+    multi = options.multi;
+    if (doc._id) {
+      // Cannot match more than one, and would confuse our
+      // don't-repeat-the-ids algorithm if we tried to use it
+      multi = false;
+    }
+    var i;
+    var keys = Object.keys(doc);
+    var _ids;
+    var nModified;
+    for (i = 0; (i < keys.length); i++) {
+      if (keys[i].substring(0, 1) === '$') {
+        atomic = true;
+        break;
+      }
+    }
+    if (atomic) {
+      // Undeprecated equivalents
+      if (multi) {
+        arguments[2] = omit(arguments[2], [ 'multi' ]);
+        return newCollection.updateMany.apply(newCollection, Array.prototype.slice.call(arguments));
+      } else {
+        return newCollection.updateOne.apply(newCollection, Array.prototype.slice.call(arguments));
+      }
+    } else {
+
+      if (multi) {
+
+        arguments[2] = omit(arguments[2], [ 'multi' ]);
+
+        // There is no replaceMany, so we have to do this repeatedly until
+        // we run out of matching documents. We also have to get all of the
+        // relevant _ids up front so we don't repeat them. It is a royal
+        // pain in the tuckus.
+        //
+        // Fortunately it is rarely used.
+
+        const promise = getIds().then(function(docs) {
+          _ids = docs.map(function(doc) {
+            return doc._id;
+          });
+          nModified = 0;
+          return attemptMulti();
+        }).then(function() {
+          return completeMulti(null, {
+            result: {
+              nModified: nModified,
+              ok: 1
+            }
+          });
+        }).catch(completeMulti);
+
+        if (takesCallback) {
+          return null;
+        } else {
+          return promise;
+        }
+
+      } else {
+        return newCollection.replaceOne.apply(newCollection, Array.prototype.slice.call(arguments));
+      }
+    }
+
+    function getIds() {
+      return newCollection.find(selector).project({ _id: 1 }).toArray();
+    }
+
+    function attemptMulti() {
+      if (!_ids.length) {
+        return null;
+      }
+      var _selector = Object.assign({}, selector, {
+        _id: _ids.shift()
+      });
+      return newCollection.replaceOne(_selector, doc, options).then(function(status) {
+        nModified += status.result.nModified;
+        return attemptMulti();
+      }).catch(function(err) {
+        return completeMulti(err);
+      });
+    }
+
+    function completeMulti(err, response) {
+      if (takesCallback) {
+        return callback(err, response);
+      } else {
+        if (err) {
+          throw err;
+        } else {
+          return response;
+        }
+      }
+    }
+
+  };
+
   return newCollection;
 }
 
