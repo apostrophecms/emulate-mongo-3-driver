@@ -243,7 +243,7 @@ function decorateCollection(collection) {
 
   newCollection.update = function(selector, doc, _options, callback) {
     var takesCallback = (typeof arguments[arguments.length - 1]) === 'function';
-    var options = (_options && ((typeof _options) === 'object') && _options) || {};
+    var options = _options && ((typeof _options) === 'object') ? _options : {};
     var multi;
     var atomic;
     multi = options.multi;
