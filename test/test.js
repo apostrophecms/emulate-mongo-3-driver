@@ -108,4 +108,58 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       });
     });
   });
+  it('updates one with an atomic operator', function(done) {
+    return trees.update({ kind: 'spruce' }, { $set: { kind: 'puce' } }, function(err, status) {
+      assert(!err);
+      assert(status.result.nModified === 1);
+      return trees.findOne({ kind: 'puce' }, function(err, obj) {
+        assert(!err);
+        assert(obj);
+        done();
+      });
+    });
+  });
+  it('updates one without an atomic operator', function(done) {
+    return trees.update({ kind: 'puce' }, { kind: 'truce', leaves: 70 }, function(err, status) {
+      assert(!err);
+      assert(status.result.nModified === 1);
+      return trees.findOne({ kind: 'truce' }, function(err, obj) {
+        assert(!err);
+        assert(obj);
+        done();
+      });
+    });
+  });
+  it('updates many with an atomic operator', function(done) {
+    return trees.update({ leaves: { $gte: 1 } }, { $set: { age: 50 } }, { multi: true }, function(err, status) {
+      assert(!err);
+      assert(status.result.nModified === 2);
+      return trees.find({}).toArray(function(err, trees) {
+        assert(!err);
+        assert(trees.length > 1);
+        assert(!trees.find(tree => (tree.leaves > 0) && (tree.age !== 50)));
+        done();
+      });
+    });
+  });
+  it('updates many without an atomic operator', function(done) {
+    return trees.update({ leaves: { $gte: 1 } }, { leaves: 1, kind: 'boring' }, { multi: true }, function(err, status) {
+      assert(!err);
+      assert(status.result.nModified === 2);
+      return trees.find({}).toArray(function(err, trees) {
+        assert(!err);
+        assert(trees.length > 1);
+        assert(!trees.find(tree => (tree.leaves !== 1) || (tree.kind !== 'boring') || tree.age));
+        done();
+      });
+    });
+  });
+  it('updates many without an atomic operator, using promises', function() {
+    return trees.update({ leaves: { $gte: 1 } }, { ohmy: true }, { multi: true }).then(function(status) {
+      return trees.find({}).toArray();
+    }).then(function(trees) {
+      assert(trees.length > 1);
+      assert(!trees.find(tree => (tree.ohmy !== true) || tree.leaves));
+    });
+  });
 });
