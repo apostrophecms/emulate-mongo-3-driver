@@ -1,3 +1,8 @@
+## 1.1.0
+
+* Deprecation warnings eliminated through emulation of all of the common deprecated methods. Test coverage included. A warning will still appear if you do not pass `useUnifiedTopology: true`. See the README for details on how to do that in ApostropheCMS.
+* Three options passed by Apostrpohe that are neither valid nor meaningful with `useUnifiedTopology: true` are automatically discarded when it is present, to prevent more deprecation warnings.
+
 ## 1.0.4
 
 Node 13.x compatibility. Resolves [this bug report](https://github.com/apostrophecms/apostrophe/issues/2120).
