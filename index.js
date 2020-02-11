@@ -89,6 +89,12 @@ MongoClient.connect = function(uri, options, callback) {
   if (!options) {
     options = {};
   }
+  if (options.useUnifiedTopology) {
+    // Per warnings these three options have no meaning with the
+    // unified topology. Swallow them so that apostrophe 2.x doesn't
+    // need to directly understand a mongodb 3.x driver option
+    options = omit(options, [ 'autoReconnect', 'reconnectTries', 'reconnectInterval' ]);
+  }
   if ((typeof callback) === 'function') {
     return superConnect.call(OriginalClient, uri, options, function(err, client) {
       if (err) {
