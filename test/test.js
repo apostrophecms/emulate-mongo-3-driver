@@ -36,6 +36,11 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       done();
     });
   });
+  it('indexes collection', function() {
+    return trees.ensureIndex({
+      location: '2dsphere'
+    });
+  });
   it('inserts', function(done) {
     return trees.insert([
       {
@@ -160,6 +165,100 @@ describe('use mongodb 3 driver in a 2.x style', function() {
     }).then(function(trees) {
       assert(trees.length > 1);
       assert(!trees.find(tree => (tree.ohmy !== true) || tree.leaves));
+    });
+  });
+  it('aggregation query works', function() {
+    return trees.aggregate([
+      {
+        $match: {
+          ohmy: true
+        }
+      }
+    ]).then(function(result) {
+      assert(result);
+      assert(Array.isArray(result));
+      assert(result.length);
+    });
+  });
+  it('aggregation query works with callback', function(done) {
+    return trees.aggregate([
+      {
+        $match: {
+          ohmy: true
+        }
+      }
+    ], function(err, result) {
+      assert(!err);
+      assert(result);
+      assert(Array.isArray(result));
+      assert(result.length);
+      done();
+    });
+  });
+  it('aggregation query works with cursor: true', function() {
+    return trees.aggregate([
+      {
+        $match: {
+          ohmy: true
+        }
+      }
+    ], {
+      cursor: true
+    }).toArray().then(function(result) {
+      assert(result);
+      assert(Array.isArray(result));
+      assert(result.length);
+    });
+  });
+  it('count query works', function() {
+    return trees.count().then(function(result) {
+      assert(result > 0);
+    });
+  });
+  it('count query works with callback', function(done) {
+    return trees.count(function(err, count) {
+      assert(!err);
+      assert(count > 0);
+      done();
+    });
+  });
+  it('count works with $near', function() {
+    return trees.insert({
+      location: {
+        type: 'Point',
+        coordinates: [ -73.9667, 40.78 ]
+      }
+    }).then(function() {
+      return trees.count({
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [ -73.9667, 40.78 ],
+              maxDistance: 100
+            }
+          }
+        }
+      });
+    }).then(function(count) {
+      assert(count === 1);
+    });
+  });
+  it('count works with $near and a callback', function(done) {
+    trees.count({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [ -73.9667, 40.78 ],
+            maxDistance: 100
+          }
+        }
+      }
+    }, function(err, count) {
+      assert(!err);
+      assert(count === 1);
+      done();
     });
   });
 });
