@@ -201,13 +201,22 @@ function decorateCollection(collection) {
     // Bring back support for operations as a variable number of
     // parameters rather than as an array
     if (Array.isArray(op1)) {
-      // Array of aggregate stages
+      const options = arguments[1];
+      if (options && ((typeof options) === 'object')) {
+        if (options.cursor) {
+          // Behaves 100% like 3.x, so pass straight through
+          return superAggregate.call(collection, Array.prototype.slice(arguments));
+        }
+      }
+      // Normal: array of aggregate stages
       if ((typeof last) === 'function') {
-        // 2.x driver supported passing a callback rather than
-        // returning a cursor, 3.x driver does not
+        // 2.x driver took a callback or returned a promise for results directly,
+        // 3.x driver always returns a cursor so convert back to results
         return superAggregate.call(collection, op1).toArray(last);
       } else {
-        return superAggregate.apply(collection, arguments);
+        // 2.x driver took a callback or returned a promise for results directly,
+        // 3.x driver always returns a cursor so convert back to results
+        return superAggregate.apply(collection, op1).toArray();
       }
     } else {
       // Positional arguments as aggregate stages (2.x supports, 3.x does not)
@@ -216,7 +225,7 @@ function decorateCollection(collection) {
         // returning a cursor, 3.x driver does not
         return superAggregate.call(collection, Array.prototype.slice.call(arguments, 0, arguments.length - 1)).toArray(last);
       } else {
-        return superAggregate.call(collection, Array.prototype.slice.call(arguments));
+        return superAggregate.call(collection, Array.prototype.slice.call(arguments)).toArray();
       }
     }
   };
@@ -348,6 +357,78 @@ function decorateCollection(collection) {
 
   };
 
+  newCollection.count = function(query, options, callback) {
+    if (arguments.length === 2) {
+      if ((typeof options) === 'function') {
+        callback = options;
+        options = {};
+      }
+    } else if (arguments.length === 1) {
+      if ((typeof query) === 'function') {
+        callback = query;
+        options = {};
+        query = {};
+      } else {
+        options = {};
+      }
+    } else if (!arguments.length) {
+      options = {};
+      query = {};
+    }
+    if (hasNestedProperties(query, [ '$where', '$near', '$nearSphere' ])) {
+      // Queries not supported by countDocuments must be turned into a
+      // find() that actually fetches the ids (minimum projection)
+      // and returns the number of documents
+      const cursor = collection.find(query);
+      if (options.limit !== undefined) {
+        cursor.limit(options.limit);
+      }
+      if (options.skip !== undefined) {
+        cursor.skip(options.skip);
+      }
+      if (options.hint !== undefined) {
+        cursor.hint(options.hint);
+      }
+      const p = cursor.project({ _id: 1 }).toArray().then(function(objects) {
+        if (callback) {
+          callback(null, objects.length);
+          return null;
+        } else {
+          return objects.length;
+        }
+      }).catch(function(e) {
+        if (callback) {
+          callback(e);
+          return null;
+        } else {
+          throw e;
+        }
+      });
+      if (!callback) {
+        return p;
+      }
+    } else {
+      const p = newCollection.countDocuments.apply(newCollection, query, options).then(function(count) {
+        if (callback) {
+          callback(null, count);
+          return null;
+        } else {
+          return count;
+        }
+      }).catch(function(e) {
+        if (callback) {
+          callback(e);
+          return null;
+        } else {
+          throw e;
+        }
+      });
+      if (!callback) {
+        return p;
+      }
+    }
+  };
+
   return newCollection;
 }
 
@@ -374,6 +455,20 @@ function parseUri(uri) {
 
 function reencode(s) {
   return encodeURIComponent(decodeURIComponent(s));
+}
+
+function hasNestedProperties(object, properties) {
+  for (const key of Object.keys(object)) {
+    if (properties.indexOf(key) !== -1) {
+      return true;
+    }
+    if (object[key] && ((typeof object[key]) === 'object')) {
+      if (hasNestedProperties(object[key], properties)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 // TODO: https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md#bulkwriteresult--bulkwriteerror (we don't use it)

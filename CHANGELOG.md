@@ -1,3 +1,9 @@
+## 1.1.1
+
+* Deprecation warning eliminated for `count` via use of `countDocuments` where possible, and where not (use of `$near` with `count` for instance), fetching of all `_id` properties as a minimal projection to arrive at a count.
+* Fixed bugs in wrapper for `aggregate()`.
+* Support for `cursor: true` option to `aggregate()`.
+
 ## 1.1.0
 
 * Deprecation warnings eliminated through emulation of all of the common deprecated methods. Test coverage included. A warning will still appear if you do not pass `useUnifiedTopology: true`. See the README for details on how to do that in ApostropheCMS.
