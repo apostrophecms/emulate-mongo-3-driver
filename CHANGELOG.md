@@ -1,4 +1,4 @@
-## 1.1.1
+## 1.2.0
 
 * Deprecation warning eliminated for `count` via use of `countDocuments` where possible, and where not (use of `$near` with `count` for instance), fetching of all `_id` properties as a minimal projection to arrive at a count.
 * Fixed bugs in wrapper for `aggregate()`.
