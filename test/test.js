@@ -174,7 +174,7 @@ describe('use mongodb 3 driver in a 2.x style', function() {
           ohmy: true
         }
       }
-    ]).then(function(result) {
+    ]).toArray().then(function(result) {
       assert(result);
       assert(Array.isArray(result));
       assert(result.length);
@@ -195,7 +195,7 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       done();
     });
   });
-  it('aggregation query works with cursor: true', function() {
+  it('aggregation query works with cursor: { batchSize: 1 }', function() {
     return trees.aggregate([
       {
         $match: {
@@ -203,7 +203,7 @@ describe('use mongodb 3 driver in a 2.x style', function() {
         }
       }
     ], {
-      cursor: true
+      cursor: { batchSize: 1 }
     }).toArray().then(function(result) {
       assert(result);
       assert(Array.isArray(result));

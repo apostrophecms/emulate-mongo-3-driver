@@ -1,3 +1,7 @@
+## 1.2.1
+
+* Fixed incompatible default behavior for `aggregate()`. Although the 2.x mongodb driver documentation suggests it would not return a cursor when the cursor option is not present, it actually does so at any time when there is no callback provided. This broke certain workflow scenarios in Apostrophe.
+
 ## 1.2.0
 
 * Deprecation warning eliminated for `count` via use of `countDocuments` where possible, and where not (use of `$near` with `count` for instance), fetching of all `_id` properties as a minimal projection to arrive at a count.

@@ -214,9 +214,10 @@ function decorateCollection(collection) {
         // 3.x driver always returns a cursor so convert back to results
         return superAggregate.call(collection, op1).toArray(last);
       } else {
-        // 2.x driver took a callback or returned a promise for results directly,
-        // 3.x driver always returns a cursor so convert back to results
-        return superAggregate.apply(collection, op1).toArray();
+        // Both 2.x and 3.x return a cursor in the absence of a callback,
+        // despite documentation implying you must explicitly ask
+        // for a cursor
+        return superAggregate.apply(collection, op1);
       }
     } else {
       // Positional arguments as aggregate stages (2.x supports, 3.x does not)
@@ -225,7 +226,10 @@ function decorateCollection(collection) {
         // returning a cursor, 3.x driver does not
         return superAggregate.call(collection, Array.prototype.slice.call(arguments, 0, arguments.length - 1)).toArray(last);
       } else {
-        return superAggregate.call(collection, Array.prototype.slice.call(arguments)).toArray();
+        // Both 2.x and 3.x return a cursor in the absence of a callback,
+        // despite documentation implying you must explicitly ask
+        // for a cursor
+        return superAggregate.call(collection, Array.prototype.slice.call(arguments));
       }
     }
   };
