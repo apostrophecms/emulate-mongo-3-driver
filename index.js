@@ -217,7 +217,7 @@ function decorateCollection(collection) {
         // Both 2.x and 3.x return a cursor in the absence of a callback,
         // despite documentation implying you must explicitly ask
         // for a cursor
-        return superAggregate.apply(collection, op1);
+        return superAggregate.call(collection, op1);
       }
     } else {
       // Positional arguments as aggregate stages (2.x supports, 3.x does not)

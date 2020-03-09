@@ -1,6 +1,7 @@
 ## 1.2.2
 
 * Fixed issue when calling `aggregate` with a `cursor` option. Thanks to Mohamad Yusri for identifying the issue.
+* Fixed issue when calling `aggregate` with no callback and no cursor option. Thanks again to Mohamad Yusri for identifying the issue.
 
 ## 1.2.1
 
