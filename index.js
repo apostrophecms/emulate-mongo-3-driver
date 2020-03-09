@@ -205,7 +205,7 @@ function decorateCollection(collection) {
       if (options && ((typeof options) === 'object')) {
         if (options.cursor) {
           // Behaves 100% like 3.x, so pass straight through
-          return superAggregate.call(collection, Array.prototype.slice(arguments));
+          return superAggregate.apply(collection, Array.prototype.slice(arguments));
         }
       }
       // Normal: array of aggregate stages
