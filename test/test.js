@@ -210,6 +210,16 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       assert(result.length);
     });
   });
+  it('aggregation with aggregation pipeline with cursor', async function() {
+    const cursor = await trees.aggregate([
+      { $match: { ohmy: true } },
+      { $group: { _id: null, count: { $sum: 1 } } }
+    ]);
+    const result = await cursor.toArray();
+    assert(result);
+    assert.equal(result.length, 1);
+    assert(result[0].count >= 0);
+  });
   it('count query works', function() {
     return trees.count().then(function(result) {
       assert(result > 0);
