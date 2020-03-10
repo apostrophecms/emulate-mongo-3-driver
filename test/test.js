@@ -271,4 +271,15 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       done();
     });
   });
+  it('client.db works twice to get another connection', function() {
+    const db2 = db.db('testdb2');
+    return db2.collection('trees').count({}).then(function(trees) {
+      assert(!trees.length);
+    }).then(function() {
+      const db3 = db2.db('testdb3');
+      return db3.collection('trees').count({}).then(function(trees) {
+        assert(!trees.length);
+      });
+    });
+  });
 });
