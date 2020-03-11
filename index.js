@@ -412,7 +412,7 @@ function decorateCollection(collection) {
         return p;
       }
     } else {
-      const p = newCollection.countDocuments.apply(newCollection, query, options).then(function(count) {
+      const p = newCollection.countDocuments(query, options).then(function(count) {
         if (callback) {
           callback(null, count);
           return null;
