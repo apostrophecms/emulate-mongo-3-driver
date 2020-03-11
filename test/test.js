@@ -232,6 +232,37 @@ describe('use mongodb 3 driver in a 2.x style', function() {
       done();
     });
   });
+  it('insert test data for count with criteria', function() {
+    return trees.insert([
+      {
+        wiggy: true
+      },
+      {
+        wiggy: true
+      },
+      {
+        wiggy: false
+      }
+    ]);
+  });
+  it('count works with criteria and callback', function(done) {
+    return trees.find({
+      wiggy: true
+    }).count(function(err, count) {
+      assert(!err);
+      assert(count === 2);
+      done();
+    });
+  });
+  it('count works with criteria and callback', function(done) {
+    return trees.find({
+      wiggy: false
+    }).count(function(err, count) {
+      assert(!err);
+      assert(count === 1);
+      done();
+    });
+  });
   it('count works with $near', function() {
     return trees.insert({
       location: {
