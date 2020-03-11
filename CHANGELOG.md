@@ -1,3 +1,9 @@
+## 1.2.3
+
+* Fixed issue that caused `count` to disregard its criteria object in at least some cases.
+* The `.db` method of a database object now works as it does with the 2.x driver, even if
+used to create a third generation of object.
+
 ## 1.2.2
 
 * Fixed issue when calling `aggregate` with a `cursor` option. Thanks to Mohamad Yusri for identifying the issue.
