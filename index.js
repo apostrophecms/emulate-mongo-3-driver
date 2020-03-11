@@ -151,7 +151,7 @@ function decorateDb(db, client) {
   // Reintroduce the "db" method of db objects, for talking to a second
   // database via the same connection
   newDb.db = function(name) {
-    return decorateDb(client.db(name));
+    return decorateDb(client.db(name), client);
   };
   // Reintroduce the "close" method of db objects, yes it closes
   // the entire client, did that before too
