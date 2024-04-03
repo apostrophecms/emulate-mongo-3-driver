@@ -1,8 +1,10 @@
-# emulate-mongo-2-driver
+# emulate-mongo-3-driver
 
 ## Purpose
 
-You have legacy code that depends on the 2.x version of the MongoDB Node.js driver. You don't want to upgrade to the 3.x driver because of [backwards compability problems](https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md), but you don't have a choice because of reported vulnerabilities such as those detected by `npm audit`.
+TODO: update references
+
+You have legacy code that depends on the 3.x version of the MongoDB Node.js driver. You don't want to upgrade to the 6.x driver because of [backwards compability problems](https://github.com/mongodb/node-mongodb-native/blob/master/CHANGES_3.0.0.md), but you don't have a choice because of reported vulnerabilities such as those detected by `npm audit`.
 
 `emulate-mongo-2-driver` aims to be a highly compatible emulation of the 2.x version of the MongoDB Node.js driver, implemented as a wrapper for the 3.x driver.
 
