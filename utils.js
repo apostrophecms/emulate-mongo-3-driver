@@ -10,10 +10,7 @@ const wrapMaybeCallback = (promise, callback, wrap = (result) => result) => {
     return;
   }
 
-  return promise.then(
-    result => wrap(result),
-    error => { throw error }
-  );
+  return promise.then(result => wrap(result));
 };
 
 module.exports = {
