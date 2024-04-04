@@ -150,6 +150,10 @@ module.exports = function (baseClass) {
       return this.deleteMany(filter, options, callback);
     }
 
+    removeOne(filter, options, callback) {
+      return this.deleteOne(filter, newOptions, callback);
+    }
+
     rename(newName, options, callback) {
       callback =
         typeof callback === 'function'
