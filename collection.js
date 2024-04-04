@@ -26,33 +26,6 @@ module.exports = function (baseClass) {
   };
 
   class EmulateCollection extends baseClass {
-    insert(docs, options, callback) {
-      if (Array.isArray(docs)) {
-        return this.insertMany(docs, options, callback);
-      }
-
-      return this.insertOne(docs, options, callback);
-    }
-
-    update(filter, update, options, callback) {
-      if (options?.multi) {
-        const { multi, ...newOptions } = options;
-
-        return this.updateMany(filter, update, newOptions, callback);
-      }
-
-      return this.updateOne(filter, update, newOptions, callback);
-    }
-
-    remove(filter, options, callback) {
-      if (options?.single) {
-        const { single, ...newOptions } = options;
-        return this.deleteOne(filter, newOptions, callback);
-      }
-
-      return this.deleteMany(filter, options, callback);
-    }
-
     bulkWrite(operations, options, callback) {
       callback =
         typeof callback === 'function'
@@ -63,6 +36,26 @@ module.exports = function (baseClass) {
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(super.bulkWrite(operations, options), callback, enrichWithResult);
+    }
+
+    ensureIndex(indexSpec, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      return wrapMaybeCallback(super.createIndex(indexSpec, options), callback);
+    }
+
+    insert(docs, options, callback) {
+      if (Array.isArray(docs)) {
+        return this.insertMany(docs, options, callback);
+      }
+
+      return this.insertOne(docs, options, callback);
     }
 
     insertMany(docs, options, callback) {
@@ -119,6 +112,34 @@ module.exports = function (baseClass) {
       return wrapMaybeCallback(super.deleteOne(filter, options), callback, enrichWithResult);
     }
 
+    remove(filter, options, callback) {
+      if (options?.single) {
+        const { single, ...newOptions } = options;
+        return this.deleteOne(filter, newOptions, callback);
+      }
+
+      return this.deleteMany(filter, options, callback);
+    }
+
+    removeMany(filter, options, callback) {
+      return this.deleteMany(filter, options, callback);
+    }
+
+    rename(newName, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      return wrapMaybeCallback(
+        super.rename(newName, options).then(collection => collection[toEmulate]()),
+        callback
+      );
+    }
+
     replaceOne(filter, replacement, options, callback) {
       callback =
         typeof callback === 'function'
@@ -129,6 +150,16 @@ module.exports = function (baseClass) {
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(super.replaceOne(filter, replacement, options), callback, enrichWithResult);
+    }
+
+    update(filter, update, options, callback) {
+      if (options?.multi) {
+        const { multi, ...newOptions } = options;
+
+        return this.updateMany(filter, update, newOptions, callback);
+      }
+
+      return this.updateOne(filter, update, newOptions, callback);
     }
 
     updateMany(filter, update, options, callback) {
