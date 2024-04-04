@@ -151,7 +151,7 @@ module.exports = function (baseClass) {
     }
 
     removeOne(filter, options, callback) {
-      return this.deleteOne(filter, newOptions, callback);
+      return this.deleteOne(filter, options, callback);
     }
 
     rename(newName, options, callback) {
