@@ -7,8 +7,8 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(
@@ -28,8 +28,8 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(
@@ -43,8 +43,8 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(super.createIndex(name, indexSpec, options), callback);
@@ -55,12 +55,13 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(
-        super.renameCollection(from, to, options).then(collection => collection[toEmulate]()),
+        super.renameCollection(from, to, options)
+          .then(collection => collection[toEmulate]()),
         callback
       );
     }
@@ -78,4 +79,4 @@ module.exports = function (baseClass) {
   );
 
   return EmulateDb;
-}
+};

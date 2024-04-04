@@ -6,7 +6,8 @@ module.exports = function (baseClass) {
   // - `BulkWriteResult.nMatched` -> `BulkWriteResult.matchedCount`
   // - `BulkWriteResult.nModified` -> `BulkWriteResult.modifiedCount`
   // - `BulkWriteResult.nRemoved` -> `BulkWriteResult.deletedCount`
-  // - `BulkWriteResult.getUpsertedIds` -> `BulkWriteResult.upsertedIds` / `BulkWriteResult.getUpsertedIdAt(index: number)`
+  // - `BulkWriteResult.getUpsertedIds` -> `BulkWriteResult.upsertedIds`
+  //     `BulkWriteResult.getUpsertedIdAt(index: number)`
   // - `BulkWriteResult.getInsertedIds` -> `BulkWriteResult.insertedIds`
   const enrichWithResult = function (response) {
     const result = {
@@ -31,11 +32,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.bulkWrite(operations, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.bulkWrite(operations, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     ensureIndex(indexSpec, options, callback) {
@@ -43,11 +48,14 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.createIndex(indexSpec, options), callback);
+      return wrapMaybeCallback(
+        super.createIndex(indexSpec, options),
+        callback
+      );
     }
 
     insert(docs, options, callback) {
@@ -63,11 +71,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.insertMany(docs, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.insertMany(docs, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     insertOne(doc, options, callback) {
@@ -75,11 +87,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.insertOne(doc, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.insertOne(doc, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     deleteMany(filter, options, callback) {
@@ -87,14 +103,18 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : typeof filter === 'function'
-          ? filter
-          : undefined;
+            ? options
+            : typeof filter === 'function'
+              ? filter
+              : undefined;
       options = typeof options !== 'function' ? options : undefined;
       filter = typeof filter !== 'function' ? filter : undefined;
 
-      return wrapMaybeCallback(super.deleteMany(filter, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.deleteMany(filter, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     deleteOne(filter, options, callback) {
@@ -102,14 +122,18 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : typeof filter === 'function'
-          ? filter
-          : undefined;
+            ? options
+            : typeof filter === 'function'
+              ? filter
+              : undefined;
       options = typeof options !== 'function' ? options : undefined;
       filter = typeof filter !== 'function' ? filter : undefined;
 
-      return wrapMaybeCallback(super.deleteOne(filter, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.deleteOne(filter, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     remove(filter, options, callback) {
@@ -131,8 +155,8 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(
@@ -146,11 +170,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.replaceOne(filter, replacement, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.replaceOne(filter, replacement, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     update(filter, update, options, callback) {
@@ -160,7 +188,7 @@ module.exports = function (baseClass) {
         return this.updateMany(filter, update, newOptions, callback);
       }
 
-      return this.updateOne(filter, update, newOptions, callback);
+      return this.updateOne(filter, update, options, callback);
     }
 
     updateMany(filter, update, options, callback) {
@@ -168,11 +196,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.updateMany(filter, update, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.updateMany(filter, update, options),
+        callback,
+        enrichWithResult
+      );
     }
 
     updateOne(filter, update, options, callback) {
@@ -180,11 +212,15 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      return wrapMaybeCallback(super.updateOne(filter, update, options), callback, enrichWithResult);
+      return wrapMaybeCallback(
+        super.updateOne(filter, update, options),
+        callback,
+        enrichWithResult
+      );
     }
   }
 
@@ -200,4 +236,4 @@ module.exports = function (baseClass) {
   );
 
   return EmulateCollection;
-}
+};

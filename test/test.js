@@ -125,7 +125,10 @@ describe('use mongodb 3 driver in a 2.x style', function() {
     });
   });
   it('updates one without an atomic operator', function(done) {
-    return trees.update({ kind: 'puce' }, { kind: 'truce', leaves: 70 }, function(err, status) {
+    return trees.update({ kind: 'puce' }, {
+      kind: 'truce',
+      leaves: 70
+    }, function(err, status) {
       assert(!err);
       assert(status.result.nModified === 1);
       return trees.findOne({ kind: 'truce' }, function(err, obj) {
@@ -148,7 +151,10 @@ describe('use mongodb 3 driver in a 2.x style', function() {
     });
   });
   it('updates many without an atomic operator', function(done) {
-    return trees.update({ leaves: { $gte: 1 } }, { leaves: 1, kind: 'boring' }, { multi: true }, function(err, status) {
+    return trees.update({ leaves: { $gte: 1 } }, {
+      leaves: 1,
+      kind: 'boring'
+    }, { multi: true }, function(err, status) {
       assert(!err);
       assert(status.result.nModified === 2);
       return trees.find({}).toArray(function(err, trees) {
@@ -213,7 +219,12 @@ describe('use mongodb 3 driver in a 2.x style', function() {
   it('aggregation with aggregation pipeline with cursor', async function() {
     const cursor = await trees.aggregate([
       { $match: { ohmy: true } },
-      { $group: { _id: null, count: { $sum: 1 } } }
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }
+        }
+      }
     ]);
     const result = await cursor.toArray();
     assert(result);

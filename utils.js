@@ -16,4 +16,4 @@ const wrapMaybeCallback = (promise, callback, wrap = (result) => result) => {
 module.exports = {
   toEmulate,
   wrapMaybeCallback
-}
+};

@@ -5,20 +5,20 @@ const logger = require('./logger.js');
 const mongoClient = require('./mongo-client.js');
 
 const emulateClasses = new Map([
-  ['Collection', collection],
-  ['Db', db],
-  ['Logger', logger],
-  ['MongoClient', mongoClient],
+  [ 'Collection', collection ],
+  [ 'Db', db ],
+  [ 'Logger', logger ],
+  [ 'MongoClient', mongoClient ]
 ]);
 
-const entries = Object.entries(mongodb).concat([[ 'Logger', null ]]);
-for (const [mongodbExportName, mongodbExportValue] of entries) {
+const entries = Object.entries(mongodb).concat([ [ 'Logger', null ] ]);
+for (const [ mongodbExportName, mongodbExportValue ] of entries) {
   const emulateClass = emulateClasses.get(mongodbExportName);
   if (emulateClass != null) {
     const patchedClass = emulateClass(mongodbExportValue);
     Object.defineProperty(
       module.exports,
-      mongodbExportName, 
+      mongodbExportName,
       {
         enumerable: true,
         get: function () {
@@ -29,7 +29,7 @@ for (const [mongodbExportName, mongodbExportValue] of entries) {
   } else {
     Object.defineProperty(
       module.exports,
-      mongodbExportName, 
+      mongodbExportName,
       {
         enumerable: true,
         get: function () {
