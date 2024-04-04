@@ -6,6 +6,7 @@ const wrapMaybeCallback = (promise, callback, wrap = (result) => result) => {
       result => callback(undefined, wrap(result)),
       error => callback(error)
     );
+
     return;
   }
 

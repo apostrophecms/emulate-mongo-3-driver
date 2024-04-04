@@ -115,6 +115,7 @@ module.exports = function (baseClass) {
     remove(filter, options, callback) {
       if (options?.single) {
         const { single, ...newOptions } = options;
+
         return this.deleteOne(filter, newOptions, callback);
       }
 

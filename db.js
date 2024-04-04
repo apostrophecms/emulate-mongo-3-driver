@@ -10,6 +10,7 @@ module.exports = function (baseClass) {
           ? options
           : undefined;
       options = typeof options !== 'function' ? options : undefined;
+
       return wrapMaybeCallback(
         super
           .collections(options)
@@ -57,6 +58,7 @@ module.exports = function (baseClass) {
           ? options
           : undefined;
       options = typeof options !== 'function' ? options : undefined;
+
       return wrapMaybeCallback(
         super.renameCollection(from, to, options).then(collection => collection[toEmulate]()),
         callback
