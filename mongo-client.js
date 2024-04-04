@@ -1,3 +1,5 @@
+const { toEmulate } = require('./utils.js');
+
 module.exports = function (baseClass) {
   class EmulateMongoClient extends baseClass {
     constructor(connectionString, options) {
@@ -8,6 +10,10 @@ module.exports = function (baseClass) {
       } = options || {};
 
       super(connectionString, v6Options);
+    }
+
+    db(dbName, options) {
+      return super.db(dbName, options)[toEmulate]();
     }
   }
 

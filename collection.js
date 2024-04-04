@@ -1,4 +1,4 @@
-const { toLegacy } = require('mongodb-legacy/src/utils');
+const { toEmulate, wrapMaybeCallback } = require('./utils.js');
 
 module.exports = function (baseClass) {
   // - `BulkWriteResult.nInserted` -> `BulkWriteResult.insertedCount`
@@ -8,73 +8,164 @@ module.exports = function (baseClass) {
   // - `BulkWriteResult.nRemoved` -> `BulkWriteResult.deletedCount`
   // - `BulkWriteResult.getUpsertedIds` -> `BulkWriteResult.upsertedIds` / `BulkWriteResult.getUpsertedIdAt(index: number)`
   // - `BulkWriteResult.getInsertedIds` -> `BulkWriteResult.insertedIds`
-  const enrichResult = result => {
-    result.nInserted = result.insertedCount;
-    result.nUpserted = result.upsertedCount;
-    result.nMatched = result.matchedCount;
-    result.nModified = result.modifiedCount;
-    result.nRemoved = result.deletedCount;
-    result.getUpsertedIds = result.upsertedIds;
-    result.getInsertedIds = result.insertedIds;
+  const enrichWithResult = function (response) {
+    const result = {
+      nInserted: response.insertedCount,
+      nUpserted: response.upsertedCount,
+      nMatched: response.matchedCount,
+      nModified: response.modifiedCount,
+      nRemoved: response.deletedCount,
+      getUpsertedIds: response.upsertedIds,
+      getInsertedIds: response.insertedIds
+    };
+
+    return {
+      result,
+      ...response
+    };
   };
 
   class EmulateCollection extends baseClass {
-    bulkWrite(operations, options, ...args) {
-      const result = super.bulkWrite(operations, options, ...args);
+    insert(docs, options, callback) {
+      if (Array.isArray(docs)) {
+        return this.insertMany(docs, options, callback);
+      }
 
-      return enrichResult(result);
+      return this.insertOne(docs, options, callback);
     }
 
-    insertOne(doc, options, ...args) {
-      const result = super.insertOne(doc, options, ...args);
+    update(filter, update, options, callback) {
+      if (options?.multi) {
+        const { multi, ...newOptions } = options;
 
-      return enrichResult(result);
+        return this.updateMany(filter, update, newOptions, callback);
+      }
+
+      return this.updateOne(filter, update, newOptions, callback);
     }
 
-    insertMany(docs, options, ...args) {
-      const result = super.insertMany(docs, options, options, ...args);
+    remove(filter, options, callback) {
+      if (options?.single) {
+        const { single, ...newOptions } = options;
+        return this.deleteOne(filter, newOptions, callback);
+      }
 
-      return enrichResult(result);
+      return this.deleteMany(filter, options, callback);
     }
 
-    deleteOne(filter, options, ...args) {
-      const result = super.deleteOne(filter, options, ...args);
+    bulkWrite(operations, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
 
-      return enrichResult(result);
+      return wrapMaybeCallback(super.bulkWrite(operations, options), callback, enrichWithResult);
     }
 
-    deleteMany(filter, options, ...args) {
-      const result = super.deleteMany(filter, options, ...args);
+    insertMany(docs, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
 
-      return enrichResult(result);
+      return wrapMaybeCallback(super.insertMany(docs, options), callback, enrichWithResult);
     }
 
-    replaceOne(filter, replacement, options, ...args) {
-      const result = super.replaceOne(filter, replacement, options, ...args);
+    insertOne(doc, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
 
-      return enrichResult(result);
+      return wrapMaybeCallback(super.insertOne(doc, options), callback, enrichWithResult);
     }
 
-    updateOne(filter, update, options, ...args) {
-      const result = super.updateOne(filter, update, options, ...args);
-      console.log('!!!!', result);
+    deleteMany(filter, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : typeof filter === 'function'
+          ? filter
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+      filter = typeof filter !== 'function' ? filter : undefined;
 
-      return enrichResult(result);
+      return wrapMaybeCallback(super.deleteMany(filter, options), callback, enrichWithResult);
     }
 
-    updateMany(filter, update, options, ...args) {
-      const result = super.updateMany(filter, update, options, ...args);
+    deleteOne(filter, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : typeof filter === 'function'
+          ? filter
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+      filter = typeof filter !== 'function' ? filter : undefined;
 
-      return enrichResult(result);
+      return wrapMaybeCallback(super.deleteOne(filter, options), callback, enrichWithResult);
+    }
+
+    replaceOne(filter, replacement, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      return wrapMaybeCallback(super.replaceOne(filter, replacement, options), callback, enrichWithResult);
+    }
+
+    updateMany(filter, update, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      return wrapMaybeCallback(super.updateMany(filter, update, options), callback, enrichWithResult);
+    }
+
+    updateOne(filter, update, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+          ? options
+          : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      return wrapMaybeCallback(super.updateOne(filter, update, options), callback, enrichWithResult);
     }
   }
 
-  Object.defineProperty(baseClass.prototype, toLegacy, {
-    enumerable: false,
-    value: function () {
-      return Object.setPrototypeOf(this, EmulateCollection.prototype);
+  Object.defineProperty(
+    baseClass.prototype,
+    toEmulate,
+    {
+      enumerable: false,
+      value: function () {
+        return Object.setPrototypeOf(this, EmulateCollection.prototype);
+      }
     }
-  });
+  );
 
   return EmulateCollection;
 }
