@@ -19,8 +19,21 @@ module.exports = function (baseClass) {
       );
     }
 
-    collection(name, options) {
-      return super.collection(name, options)[toEmulate]();
+    collection(name, options, callback) {
+      callback =
+        typeof callback === 'function'
+          ? callback
+          : typeof options === 'function'
+            ? options
+            : undefined;
+      options = typeof options !== 'function' ? options : undefined;
+
+      const collection = super.collection(name, options)[toEmulate]();
+      if (callback) {
+        callback(null, collection);
+      }
+
+      return collection;
     }
 
     createCollection(name, options, callback) {
