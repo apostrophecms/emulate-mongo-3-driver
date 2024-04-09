@@ -1,11 +1,13 @@
 const mongodb = require('mongodb-legacy');
 const collection = require('./collection.js');
+const findCursor = require('./find-cursor.js');
 const db = require('./db.js');
 const logger = require('./logger.js');
 const mongoClient = require('./mongo-client.js');
 
 const emulateClasses = new Map([
   [ 'Collection', collection ],
+  [ 'FindCursor', findCursor ],
   [ 'Db', db ],
   [ 'Logger', logger ],
   [ 'MongoClient', mongoClient ]
