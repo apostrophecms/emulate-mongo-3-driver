@@ -17,11 +17,29 @@ module.exports = function (baseClass) {
       nModified: response.modifiedCount,
       nRemoved: response.deletedCount,
       getUpsertedIds: response.upsertedIds,
-      getInsertedIds: response.insertedIds
+      getInsertedIds: response.insertedIds,
+      ok: 1,
+      n: response.insertedCount !== undefined
+        ? response.insertedCount
+        : response.modifiedCount !== undefined
+          ? response.matchedCount
+          : response.deletedCount !== undefined
+            ? response.deletedCount
+            : response.insertedId !== undefined
+              ? 1
+              : undefined
     };
+
+    const additional = response.insertedId !== undefined && response.insertedCount === undefined
+      ? {
+        insertedCount: 1,
+        ops: [ { _id: response.insertedId } ]
+      }
+      : {};
 
     return {
       result,
+      ...additional,
       ...response
     };
   };
