@@ -61,6 +61,10 @@ module.exports = function (baseClass) {
       );
     }
 
+    count(filter, options, callback) {
+      return super.countDocuments(filter, options, callback);
+    }
+
     ensureIndex(indexSpec, options, callback) {
       callback =
         typeof callback === 'function'
@@ -244,6 +248,31 @@ module.exports = function (baseClass) {
         enrichWithResult
       );
     }
+
+    // conversion APIs
+    // aggregate(pipeline, options) {
+    //   return super.aggregate(pipeline, options)[toEmulate]();
+    // }
+    //
+    // initializeUnorderedBulkOp(options) {
+    //   return super.initializeUnorderedBulkOp(options)[toEmulate]();
+    // }
+    //
+    // initializeOrderedBulkOp(options) {
+    //   return super.initializeOrderedBulkOp(options)[toEmulate]();
+    // }
+
+    find(filter, options) {
+      return super.find(filter, options)[toEmulate]();
+    }
+
+    // listIndexes(options) {
+    //   return super.listIndexes(options)[toEmulate]();
+    // }
+
+    // watch(pipeline, options) {
+    //   return super.watch(pipeline, options)[toEmulate]();
+    // }
   }
 
   Object.defineProperty(
