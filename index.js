@@ -6,8 +6,8 @@ const logger = require('./logger.js');
 const mongoClient = require('./mongo-client.js');
 
 const emulateClasses = new Map([
-  [ 'Collection', collection ],
   [ 'FindCursor', findCursor ],
+  [ 'Collection', collection ],
   [ 'Db', db ],
   [ 'Logger', logger ],
   [ 'MongoClient', mongoClient ]
