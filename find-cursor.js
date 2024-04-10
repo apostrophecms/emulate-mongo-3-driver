@@ -1,4 +1,4 @@
-const { toEmulate, wrapMaybeCallback } = require('./utils.js');
+const { toEmulate } = require('./utils.js');
 
 module.exports = function (baseClass) {
   class EmulateFindCursor extends baseClass {
@@ -7,16 +7,14 @@ module.exports = function (baseClass) {
         typeof callback === 'function'
           ? callback
           : typeof options === 'function'
-          ? options
-          : undefined;
+            ? options
+            : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      console.log({ self: this, client: super.client });
-      // console.log(this.namespace.db);
+      // TODO: implement collection
       const collection = {
         countDocuments: () => {}
-      }
-      // console.log(this.namespace.collection);
+      };
       return collection.countDocuments(
         this[super.kFilter],
         {
@@ -25,7 +23,7 @@ module.exports = function (baseClass) {
           ...(options || {})
         },
         callback
-      )
+      );
     }
   }
 
