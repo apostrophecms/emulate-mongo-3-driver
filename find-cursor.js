@@ -11,7 +11,9 @@ module.exports = function (baseClass) {
             : undefined;
       options = typeof options !== 'function' ? options : undefined;
 
-      const collection = this.client.db(this.namespace.db).collection(this.namespace.collection);
+      const collection = this.client
+        .db(this.namespace.db)
+        .collection(this.namespace.collection);
       const symbols = Object.getOwnPropertySymbols(this);
       const [ filter ] = symbols.filter(symbol => symbol.description === 'filter');
       const [ builtOptions ] = symbols.filter(symbol => symbol.description === 'builtOptions');

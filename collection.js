@@ -30,7 +30,8 @@ module.exports = function (baseClass) {
               : undefined
     };
 
-    const additional = response.insertedId !== undefined && response.insertedCount === undefined
+    const additional = response.insertedId !== undefined &&
+      response.insertedCount === undefined
       ? {
         insertedCount: 1,
         ops: [ { _id: response.insertedId } ]

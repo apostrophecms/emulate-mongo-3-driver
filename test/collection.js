@@ -86,11 +86,13 @@ describe('collection', function() {
             result: {
               getInsertedIds: actual.insertedIds,
               getUpsertedIds: undefined,
+              n: 2,
               nInserted: 2,
               nMatched: undefined,
               nModified: undefined,
               nRemoved: undefined,
-              nUpserted: undefined
+              nUpserted: undefined,
+              ok: 1
             }
           };
 
@@ -122,11 +124,13 @@ describe('collection', function() {
       result: {
         getInsertedIds: actual.insertedIds,
         getUpsertedIds: undefined,
+        n: 2,
         nInserted: 2,
         nMatched: undefined,
         nModified: undefined,
         nRemoved: undefined,
-        nUpserted: undefined
+        nUpserted: undefined,
+        ok: 1
       }
     };
 
@@ -147,15 +151,19 @@ describe('collection', function() {
           const actual = result;
           const expected = {
             acknowledged: true,
+            insertedCount: 1,
             insertedId: actual.insertedId,
+            ops: [ { _id: actual.insertedId } ],
             result: {
               getInsertedIds: undefined,
               getUpsertedIds: undefined,
+              n: 1,
               nInserted: undefined,
               nMatched: undefined,
               nModified: undefined,
               nRemoved: undefined,
-              nUpserted: undefined
+              nUpserted: undefined,
+              ok: 1
             }
           };
 
@@ -175,15 +183,19 @@ describe('collection', function() {
     });
     const expected = {
       acknowledged: true,
+      insertedCount: 1,
       insertedId: actual.insertedId,
+      ops: [ { _id: actual.insertedId } ],
       result: {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
+        n: 1,
         nInserted: undefined,
         nMatched: undefined,
         nModified: undefined,
         nRemoved: undefined,
-        nUpserted: undefined
+        nUpserted: undefined,
+        ok: 1
       }
     };
 
@@ -214,11 +226,13 @@ describe('collection', function() {
                 result: {
                   getInsertedIds: undefined,
                   getUpsertedIds: undefined,
+                  n: 2,
                   nInserted: undefined,
                   nMatched: undefined,
                   nModified: undefined,
                   nRemoved: 2,
-                  nUpserted: undefined
+                  nUpserted: undefined,
+                  ok: 1
                 }
               };
 
@@ -247,11 +261,13 @@ describe('collection', function() {
       result: {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
+        n: 2,
         nInserted: undefined,
         nMatched: undefined,
         nModified: undefined,
         nRemoved: 2,
-        nUpserted: undefined
+        nUpserted: undefined,
+        ok: 1
       }
     };
 
@@ -284,11 +300,13 @@ describe('collection', function() {
                 result: {
                   getInsertedIds: undefined,
                   getUpsertedIds: undefined,
+                  n: 1,
                   nInserted: undefined,
                   nMatched: undefined,
                   nModified: undefined,
                   nRemoved: 1,
-                  nUpserted: undefined
+                  nUpserted: undefined,
+                  ok: 1
                 }
               };
 
@@ -322,11 +340,13 @@ describe('collection', function() {
       result: {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
+        n: 1,
         nInserted: undefined,
         nMatched: undefined,
         nModified: undefined,
         nRemoved: 1,
-        nUpserted: undefined
+        nUpserted: undefined,
+        ok: 1
       }
     };
 
@@ -385,11 +405,13 @@ describe('collection', function() {
                 result: {
                   getInsertedIds: undefined,
                   getUpsertedIds: undefined,
+                  n: 1,
                   nInserted: undefined,
                   nMatched: 1,
                   nModified: 1,
                   nRemoved: undefined,
-                  nUpserted: 0
+                  nUpserted: 0,
+                  ok: 1
                 },
                 upsertedCount: 0,
                 upsertedId: null
@@ -425,11 +447,13 @@ describe('collection', function() {
       result: {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
+        n: 1,
         nInserted: undefined,
         nMatched: 1,
         nModified: 1,
         nRemoved: undefined,
-        nUpserted: 0
+        nUpserted: 0,
+        ok: 1
       },
       upsertedCount: 0,
       upsertedId: null
@@ -470,11 +494,13 @@ describe('collection', function() {
                 result: {
                   getInsertedIds: undefined,
                   getUpsertedIds: undefined,
+                  n: 2,
                   nInserted: undefined,
                   nMatched: 2,
                   nModified: 2,
                   nRemoved: undefined,
-                  nUpserted: 0
+                  nUpserted: 0,
+                  ok: 1
                 },
                 upsertedCount: 0,
                 upsertedId: null
@@ -517,10 +543,12 @@ describe('collection', function() {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
         nInserted: undefined,
+        n: 2,
         nMatched: 2,
         nModified: 2,
         nRemoved: undefined,
-        nUpserted: 0
+        nUpserted: 0,
+        ok: 1
       },
       upsertedCount: 0,
       upsertedId: null
@@ -559,11 +587,13 @@ describe('collection', function() {
                 result: {
                   getInsertedIds: undefined,
                   getUpsertedIds: undefined,
+                  n: 1,
                   nInserted: undefined,
                   nMatched: 1,
                   nModified: 1,
                   nRemoved: undefined,
-                  nUpserted: 0
+                  nUpserted: 0,
+                  ok: 1
                 },
                 upsertedCount: 0,
                 upsertedId: null
@@ -603,11 +633,13 @@ describe('collection', function() {
       result: {
         getInsertedIds: undefined,
         getUpsertedIds: undefined,
+        n: 1,
         nInserted: undefined,
         nMatched: 1,
         nModified: 1,
         nRemoved: undefined,
-        nUpserted: 0
+        nUpserted: 0,
+        ok: 1
       },
       upsertedCount: 0,
       upsertedId: null
