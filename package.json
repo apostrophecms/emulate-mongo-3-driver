@@ -1,14 +1,14 @@
 {
-  "name": "emulate-mongo-2-driver",
-  "version": "1.2.3",
-  "description": "Emulate the Mongo 2.x nodejs driver on top of the Mongo 3.x nodejs driver, for bc",
+  "name": "@apostrophecms/emulate-mongo-3-driver",
+  "version": "1.0.0",
+  "description": "Emulate the Mongo 3.x nodejs driver on top of the Mongo 6.x nodejs driver, for bc",
   "main": "index.js",
   "scripts": {
     "test": "npx eslint . && mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apostrophecms/emulate-mongo-2-driver.git"
+    "url": "git+https://github.com/apostrophecms/emulate-mongo-3-driver.git"
   },
   "keywords": [
     "mongodb",
@@ -18,20 +18,20 @@
   "author": "Apostrophe Technologies",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/apostrophecms/emulate-mongo-2-driver/issues"
+    "url": "https://github.com/apostrophecms/emulate-mongo-3-driver/issues"
   },
-  "homepage": "https://github.com/apostrophecms/emulate-mongo-2-driver#readme",
+  "homepage": "https://github.com/apostrophecms/emulate-mongo-3-driver#readme",
   "dependencies": {
-    "mongodb": "^3.3.5"
+    "mongodb": "^6.5.0",
+    "mongodb-legacy": "^6.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
-    "eslint-config-apostrophe": "^2.0.2",
-    "eslint-config-standard": "^11.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-apostrophe": "^4.3.0",
+    "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "mocha": "^6.2.2"
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "mocha": "^10.4.0"
   }
 }
