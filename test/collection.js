@@ -18,6 +18,7 @@ describe('collection', function() {
   });
 
   // [ ] bulkWrite
+  // [ ] count
   // [x] ensureIndex
   // [x] insert
   //   [x] insertMany
