@@ -28,6 +28,10 @@ module.exports = function (baseClass) {
         callback
       );
     }
+
+    sort(sort, direction) {
+      return super.sort(sort || {}, direction);
+    }
   }
 
   Object.defineProperty(
