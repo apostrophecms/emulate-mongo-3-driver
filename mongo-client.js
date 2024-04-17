@@ -6,6 +6,9 @@ module.exports = function (baseClass) {
       const {
         useUnifiedTopology,
         useNewUrlParser,
+        autoreconnect,
+        reconnectTries,
+        reconnectInterval,
         ...v6Options
       } = options || {};
 
