@@ -17,6 +17,12 @@ module.exports = function (baseClass) {
       const symbols = Object.getOwnPropertySymbols(this);
       const [ filter ] = symbols.filter(symbol => symbol.description === 'filter');
       const [ builtOptions ] = symbols.filter(symbol => symbol.description === 'builtOptions');
+      console.log({
+        db: this.namespace.db,
+        collection: this.namespace.collection,
+        filter: this[filter],
+        builtOptions: this[builtOptions]
+      });
 
       return collection.countDocuments(
         this[filter],
