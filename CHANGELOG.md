@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## UNRELEASED
+
+### Fix
+
+* Lock to `mongodb@6.7.0` to prevent issues with `cursor.count` not using the current query filter.
+
 ## 1.0.2
 
 ### Fix
