@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## UNRELEASED
+## 1.0.3 (2024-06-28)
 
 ### Fix
 
