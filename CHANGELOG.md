@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.0.4 (2024-07-04)
+
+### Fix
+
+* Update package-lock.json to reflect package.json content.
+
 ## 1.0.3 (2024-06-28)
 
 ### Fix
