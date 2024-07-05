@@ -76,12 +76,12 @@ describe('find-cursor', function() {
           type: 'shrub'
         }
       ]
-    )
+    );
 
     const actual = {
       tree: await trees.find({ type: 'tree' }).count(),
       shrub: await trees.find({ type: 'shrub' }).count(),
-      all: await trees.find().count(),
+      all: await trees.find().count()
     };
     const expected = {
       tree: 2,
@@ -165,7 +165,7 @@ describe('find-cursor', function() {
           type: 'shrub'
         }
       ]
-    )
+    );
 
     const actual = await trees
       .find({ type: 'tree' }, { title: 1 })
