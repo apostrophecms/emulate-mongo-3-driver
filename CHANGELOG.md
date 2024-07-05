@@ -4,7 +4,7 @@
 
 ### Add
 
-* Add integration test for `collection.count`, find-cursor.count` and `find-cursor.sort`.
+* Add integration test for `collection.count`, `find-cursor.count` and `find-cursor.sort`.
 
 ## 1.0.4 (2024-07-04)
 
