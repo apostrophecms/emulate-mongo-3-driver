@@ -18,7 +18,7 @@ describe('collection', function() {
   });
 
   // [ ] bulkWrite
-  // [ ] count
+  // [x] count
   // [x] ensureIndex
   // [x] insert
   //   [x] insertMany
@@ -33,6 +33,84 @@ describe('collection', function() {
   // [x] update
   //   [x] updateMany
   //   [x] updateOne
+
+  it('collection.count (callback)', function(done) {
+    const trees = db.collection('trees');
+
+    trees.insert(
+      [
+        {
+          title: 'birch',
+          type: 'tree'
+        },
+        {
+          title: 'oak',
+          type: 'tree'
+        },
+        {
+          title: 'rhododendron ',
+          type: 'shrub'
+        }
+      ],
+      {},
+      (insertError) => {
+        if (insertError) {
+          done(insertError);
+
+          return;
+        }
+
+        trees.count(
+          { type: 'shrub' },
+          {},
+          (err, result) => {
+            try {
+              assert.ifError(err);
+              const actual = result;
+              const expected = 1;
+
+              assert.equal(actual, expected);
+              done();
+            } catch (error) {
+              done(error);
+            }
+          }
+        );
+      }
+    );
+  });
+  it('collection.count (promise)', async function() {
+    const trees = db.collection('trees');
+
+    await trees.insert(
+      [
+        {
+          title: 'birch',
+          type: 'tree'
+        },
+        {
+          title: 'oak',
+          type: 'tree'
+        },
+        {
+          title: 'rhododendron ',
+          type: 'shrub'
+        }
+      ]
+    );
+    const actual = {
+      tree: await trees.count({ type: 'tree' }),
+      shrub: await trees.count({ type: 'shrub' }),
+      all: await trees.count()
+    };
+    const expected = {
+      tree: 2,
+      shrub: 1,
+      all: 3
+    };
+
+    assert.deepEqual(actual, expected);
+  });
 
   it('collection.ensureIndex (callback)', function(done) {
     const trees = db.collection('trees');
