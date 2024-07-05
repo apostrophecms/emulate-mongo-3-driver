@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## UNRELEASED
+
+### Add
+
+* Add integration test for `find-cursor.count` and `find-cursor.sort`.
+
 ## 1.0.4 (2024-07-04)
 
 ### Fix
