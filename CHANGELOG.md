@@ -5,6 +5,11 @@
 ### Add
 
 * Add integration test for `collection.count`, `find-cursor.count` and `find-cursor.sort`.
+* Add support for `mongodb@6.8.0` and up.
+
+### Changes
+
+* Use a projection to count documents.
 
 ## 1.0.4 (2024-07-04)
 
