@@ -5,7 +5,7 @@
 ### Add
 
 * Add integration test for `collection.count`, `find-cursor.count` and `find-cursor.sort`.
-* Add support for `mongodb@6.8.0` and up.
+* Add support for the `mongodb@6.8.0` driver and up.
 
 ### Changes
 
