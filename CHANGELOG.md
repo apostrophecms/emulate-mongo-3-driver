@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.0.6 (2024-07-19)
+
+### Changes
+
+* Reset sort when using `find-cursor.count` due to internal code using projection with `{ _id: 1 }`.
+
 ## 1.0.5 (2024-07-09)
 
 ### Add
