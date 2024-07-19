@@ -12,7 +12,12 @@ module.exports = function (baseClass) {
       options = typeof options !== 'function' ? options : undefined;
 
       return wrapMaybeCallback(
-        this.project({ _id: 1 }).toArray().then(count => count.length),
+        this
+          .clone()
+          .project({ _id: 1 })
+          .sort(null)
+          .toArray()
+          .then(count => count.length),
         callback
       );
     }
